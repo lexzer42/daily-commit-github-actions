@@ -1,7 +1,7 @@
 # github-actions
 This project sets up a GitHub Actions workflow to automatically make commits to a repository at a specific time every day
 
-```markdown
+
 # Daily Commit with Inspirational Quote
 
 This GitHub Action sets up a workflow to automatically make daily commits to a repository at a specific time, incorporating a random inspirational quote with each commit. The commits occur at 00:00 UTC, but you can adjust the schedule to your timezone.
