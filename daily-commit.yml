@@ -1,0 +1,26 @@
+name: Daily Commit with Inspirational Quote
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs at 00:00 UTC, adjust this for your timezone
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Fetch Inspirational Quote
+      run: |
+        QUOTE=$(curl -s 'https://zenquotes.io/api/random' | jq -r '.[0].q')
+        echo "Automatic commit with inspirational quote: \"$QUOTE\"" >> example.txt
+
+    - name: Commit Changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add example.txt
+        git commit -m "Auto commit with inspirational quote $(date +%F)"
+        git push
