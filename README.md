@@ -34,7 +34,8 @@ jobs:
     - name: Fetch Inspirational Quote
       run: |
         QUOTE=$(curl -s 'https://zenquotes.io/api/random' | jq -r '.[0].q')
-        echo "Automatic commit with inspirational quote: \"$QUOTE\"" >> example.txt
+        COMMIT_TIME=$(date '+%d %B of %Y in %H hours %M minutes')
+        echo "$COMMIT_TIME - \"$QUOTE\"" >> example.txt
 
     - name: Commit Changes
       run: |
@@ -43,6 +44,7 @@ jobs:
         git add example.txt
         git commit -m "Auto commit with inspirational quote $(date +%F)"
         git push
+
 ```
 
 4. Customize the workflow as needed. You can change the filename (`example.txt`) or modify the commit message format.
