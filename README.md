@@ -21,7 +21,7 @@ name: Daily Commit with Inspirational Quote
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs at 00:00 UTC, adjust this for your timezone
+    - cron: '0 0 * * *' # Runs every day at midnight
 
 jobs:
   commit:
@@ -30,6 +30,8 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
+      with:
+        ref: 'main' # Specify the branch here
 
     - name: Fetch Inspirational Quote
       run: |
@@ -43,7 +45,7 @@ jobs:
         git config --local user.name "GitHub Action"
         git add example.txt
         git commit -m "Auto commit with inspirational quote $(date +%F)"
-        git push
+        git push https://${{ secrets.GH_PAT }}@github.com/lexzer42/daily-commit-github-actions.git main # Specify the branch here
 
 ```
 
