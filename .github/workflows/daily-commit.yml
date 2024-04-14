@@ -2,7 +2,7 @@ name: Daily Commit with Inspirational Quote
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs at 00:00 UTC, adjust this for your timezone
+    - cron: '*/30 * * * *' # Runs every 30 seconds
 
 jobs:
   commit:
