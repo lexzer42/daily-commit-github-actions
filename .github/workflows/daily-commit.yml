@@ -32,4 +32,9 @@ jobs:
         git add example.txt
         git status  # Add this for debugging purposes
         git commit -m "Auto commit with inspirational quote $(date +%F)"
-        git push origin main # Assuming the branch name is main, change if needed
+
+    - name: Pull changes from remote
+      run: git pull origin main
+
+    - name: Push changes to remote
+      run: git push origin main
