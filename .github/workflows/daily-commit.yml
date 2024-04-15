@@ -1,38 +1,35 @@
-name: Daily Commit
+name: Daily Commit (Improved)
 
 on:
-  schedule:
-    - cron: '*/5 * * * *'  # Run every 5 minutes
+  schedule:  # Consider limitations of scheduled workflows
+    - cron: '*/5 * * * *'  # Run every 5 minutes (for testing)
 
 jobs:
   commit:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
-      with:
-        ref: 'main' # Specify the branch here
+      - name: Checkout Repository (using default branch)
+        uses: actions/checkout@v2
 
-    - name: Set up Git
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
+      - name: Set up Git (check for typos)
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
 
-    - name: Pull changes from remote
-      run: git pull origin main
+      - name: Pull changes from remote (assuming main branch)
+        run: git pull origin main
 
-    - name: Fetch Inspirational Quote
-      run: |
-        QUOTE=$(curl -s 'https://zenquotes.io/api/random' | jq -r '.[0].q')
-        COMMIT_TIME=$(date '+%d %B of %Y in %H hours %M minutes')
-        echo "Fetched Inspirational Quote at $COMMIT_TIME - \"$QUOTE\"" >> example.txt
+      - name: Fetch Inspirational Quote (with error handling)
+        run: |
+          QUOTE=$(curl -sSL 'https://zenquotes.io/api/random' | jq -r '.[0].q' || echo "Failed to fetch quote")  # Handle potential errors
+          COMMIT_TIME=$(date '+%d %B of %Y, %H:%M')
+          echo "Fetched Inspirational Quote at $COMMIT_TIME - \"$QUOTE\"" >> example.txt
 
-    - name: Commit Changes
-      run: |
-        git add example.txt
-        git status  # Add this for debugging purposes
-        git commit -m "Auto commit with inspirational quote $(date +%F)"
+      - name: Commit Changes (shorter commit message format)
+        run: |
+          git add example.txt
+          git status  # For debugging
+          git commit -m "Auto commit with quote: $QUOTE ($(date +%F))"
 
-    - name: Push changes to remote
-      run: git push origin main
+      - name: Push changes to remote (check permissions)
+        run: git push origin main
