@@ -12,12 +12,16 @@ jobs:
     - uses: actions/checkout@v1
     - name: Fetch motivational quote
       run: |
-        quote=$(curl -s https://programming-quotes-api.herokuapp.com/quotes/random)
-        echo "$quote" | jq -r '.en' >> quotes.txt
-        echo "Commit details:" >> quotes.txt
-        echo "----------------------------------------" >> quotes.txt
-        echo "$(git log -1 --pretty=format:'Commit: %h%nAuthor: %an%nDate: %ar%nMessage: %s')" >> quotes.txt
-        echo "" >> quotes.txt
+            quote=$(curl -s https://programming-quotes-api.herokuapp.com/quotes/random)
+            quote_text=$(echo "$quote" | jq -r '.en')
+            echo "$quote_text" >> quotes.txt
+            echo "Commit details:" >> quotes.txt
+            echo "----------------------------------------" >> quotes.txt
+            echo "Commit: $(git log -1 --pretty=format:'%h')" >> quotes.txt
+            echo "Author: $(git log -1 --pretty=format:'%an')" >> quotes.txt
+            echo "Date: $(git log -1 --pretty=format:'%ar')" >> quotes.txt
+            echo "Message: $(git log -1 --pretty=format:'%s')" >> quotes.txt
+            echo "" >> quotes.txt
     - name: Check if file has changed
       id: check_changes
       run: |
