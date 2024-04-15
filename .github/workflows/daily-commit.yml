@@ -28,8 +28,8 @@ jobs:
                 # Get the current timestamp
                 timestamp=$(date +"%Y-%m-%d %T")
                 
-                # Define the file path
-                file_path="${{ github.workspace }}/quotes.txt"
+                # Define the file path including the GitHub path
+                file_path="${{ secrets.GH_PATH }}/quotes.txt"
                 
                 # Append the quote along with additional details to the quotes.txt file
                 echo "Timestamp: $timestamp" >> "$file_path"
