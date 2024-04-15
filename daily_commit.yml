@@ -1,0 +1,56 @@
+name: Motivational Quotes
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '*/5 * * * *'  # Run every 5 minutes
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v1
+
+    - name: Fetch motivational quote
+      run: |
+            # Fetch a motivational quote from the API using the stored API key
+            api_key="${{ secrets.API_KEY }}"
+            category="happiness"
+            quote=$(curl -s -H "X-Api-Key: $api_key" "https://api.api-ninjas.com/v1/quotes?category=$category")
+            
+            # Check if the API response contains valid JSON
+            if jq -e '.[]' >/dev/null <<<"$quote"; then
+                # Extract the quote text from the JSON response
+                quote_text=$(echo "$quote" | jq -r '.quote')
+                
+                # Get the current timestamp
+                timestamp=$(date +"%Y-%m-%d %T")
+                
+                # Define the file path including the GitHub path
+                file_path="${{ secrets.GH_PATH }}/quotes.txt"
+                
+                # Append the quote along with additional details to the quotes.txt file
+                echo "Timestamp: $timestamp" >> "$file_path"
+                echo "Quote: $quote_text" >> "$file_path"
+                echo "" >> "$file_path"
+                
+                # Configure Git user for the commit
+                git config --global user.email "actions@github.com"
+                git config --global user.name "GitHub Actions"
+                
+                # Stage the changes (add quotes.txt)
+                git add "$file_path"
+                
+                # Commit the changes with a descriptive message
+                git commit -m "Add new motivational quote: $timestamp"
+                
+                # Push the changes to the main branch using personal access token for authentication
+                git push origin HEAD:main
+                
+            else
+                echo "Error: Invalid JSON response from the API"
+                exit 1
+            fi
+            shell: /usr/bin/bash -e {0}
