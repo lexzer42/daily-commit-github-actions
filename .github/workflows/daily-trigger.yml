@@ -2,7 +2,7 @@ name: Daily Trigger
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs every day at midnight
+    - cron: '*/30 * * * *' # Runs every 30 seconds for testing
 
 jobs:
   trigger:
@@ -11,6 +11,6 @@ jobs:
     - name: Trigger Daily Workflow
       uses: peter-evans/repository-dispatch@v2
       with:
-        token: ${{ secrets.PAT }}
-        repository: lexzer42/daily-commit-github-actions
+        token: ${{ secrets.GH_PAT }}
+        repository: lexzer42/daily-commit-github-actions.git
         workflow: Daily Commit with Inspirational Quote
