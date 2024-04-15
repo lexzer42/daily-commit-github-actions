@@ -14,13 +14,13 @@ jobs:
       run: |
             quote=$(curl -s https://programming-quotes-api.herokuapp.com/quotes/random)
             quote_text=$(echo "$quote" | jq -r '.en')
-            echo "$quote_text" >> quotes.txt
-            echo "Commit details:" >> quotes.txt
-            echo "----------------------------------------" >> quotes.txt
-            echo "Author: GitHub Actions" >> quotes.txt
-            echo "Date: $(date)" >> quotes.txt
-            echo "Message: Add motivational quote" >> quotes.txt
-            echo "" >> quotes.txt
+            echo "$quote_text"
+            echo "Commit details:"
+            echo "----------------------------------------"
+            echo "Author: GitHub Actions"
+            echo "Date: $(date)"
+            echo "Message: Add motivational quote"
+            echo ""
     - name: Check if file has changed
       id: check_changes
       run: |
