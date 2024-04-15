@@ -1,42 +1,40 @@
-name: Motivational Push (Every Hour)
-
+name: Motivational Quotes
 on:
+  push:
+    branches:
+      - main
   schedule:
-    - cron: '*/5 * * * *'  # Every hour (change cron for different intervals)
-
+    - cron: '*/5 * * * *'
 jobs:
-  quote-and-commit:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2  # Checkout repository code
-
-      - name: Fetch Inspirational Quote (with error handling)
-        run: |
-          QUOTE=$(curl -sSL 'https://zenquotes.io/api/random?category=programming' | jq -r '.[0].q' || echo "Failed to fetch quote")
-          COMMIT_TIME=$(date '+%d %B %Y, %H:%M:%S %Z')  # Include time zone
-          COMMIT_MESSAGE="**Motivation Alert!** Quote: \"$QUOTE\" - $COMMIT_TIME"
-
-      - name: Add a Cool ASCII Art Banner  # Optional
-        run: |
-          echo "
-           _   _ _   _ _   _   _ 
-          | | | | | | | | | | | |
-          | |_| | | | | | | | | |
-          |  _  | | | | | | | | |
-          | | | | |_| |_| |_| |_|
-          |_|_|_|_  _|_|_|   _| |
-                | |     (_|  | |
-                |_|          |_|
-          " >> example.txt
-
-      - name: Append Motivational Quote
-        run: |
-          echo "$COMMIT_MESSAGE" >> example.txt
-
-      - name: Add and Commit Changes
-        run: |
-          git add example.txt
-          git commit -m "$COMMIT_MESSAGE"
-
-      - name: Push Changes (check permissions)  # Optional
-        run: git push origin main
+    - uses: actions/checkout@v1
+    - name: Fetch motivational quote
+      run: |
+        quote=$(curl -s https://programming-quotes-api.herokuapp.com/quotes/random)
+        echo "$quote" | jq -r '.en' >> quotes.txt
+        echo "Commit details:" >> quotes.txt
+        echo "----------------------------------------" >> quotes.txt
+        echo "$(git log -1 --pretty=format:'Commit: %h%nAuthor: %an%nDate: %ar%nMessage: %s')" >> quotes.txt
+        echo "" >> quotes.txt
+    - name: Check if file has changed
+      id: check_changes
+      run: |
+        if git diff --quiet; then
+          echo "No changes detected."
+          exit 0
+        else
+          echo "Changes detected."
+          exit 1
+        fi
+    - name: Commit changes
+      if: steps.check_changes.outcome == 'failure'
+      run: |
+        git config --global user.email "actions@github.com"
+        git config --global user.name "GitHub Actions"
+        git add quotes.txt
+        git commit -m "Add motivational quote and commit details"
+        git pull origin main --no-edit
+        git push
+      continue-on-error: true
