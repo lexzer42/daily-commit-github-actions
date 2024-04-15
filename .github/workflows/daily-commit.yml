@@ -37,6 +37,9 @@ jobs:
                 git config --global user.email "actions@github.com"
                 git config --global user.name "GitHub Actions"
                 
+                # Switch to the main branch
+                git checkout main
+                
                 # Stage the changes (add quotes.txt)
                 git add "$file_path"
                 
@@ -44,10 +47,9 @@ jobs:
                 git commit -m "Add new motivational quote: $timestamp"
                 
                 # Push the changes to the repository
-                git push
+                git push origin main
             else
                 echo "Error: Invalid JSON response from the API"
                 exit 1
             fi
-            
             shell: /usr/bin/bash -e {0}
