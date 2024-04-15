@@ -4,7 +4,7 @@ This project sets up a GitHub Actions workflow to automatically make commits to 
 
 # Daily Commit with Inspirational Quote
 
-This GitHub Action sets up a workflow to automatically make daily commits to a repository at a specific time, incorporating a random inspirational quote with each commit. The commits occur at 00:00 UTC, but you can adjust the schedule to your timezone.
+This GitHub Action sets up a workflow to automatically make daily commits to a repository at a specific time, incorporating a random inspirational quote with each commit. The commits occur at 12:00 UTC (noon), but you can adjust the schedule to your timezone.
 
 ## Usage
 
@@ -21,7 +21,7 @@ name: Daily Commit with Inspirational Quote
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs every day at midnight
+    - cron:  '0 12 * * *' # Runs every day at 12 PM (noon)
 
 jobs:
   commit:
@@ -33,6 +33,11 @@ jobs:
       with:
         ref: 'main' # Specify the branch here
 
+    - name: Set up Git
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+
     - name: Fetch Inspirational Quote
       run: |
         QUOTE=$(curl -s 'https://zenquotes.io/api/random' | jq -r '.[0].q')
@@ -41,12 +46,9 @@ jobs:
 
     - name: Commit Changes
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
         git add example.txt
         git commit -m "Auto commit with inspirational quote $(date +%F)"
-        git push https://${{ secrets.GH_PAT }}@github.com/lexzer42/daily-commit-github-actions.git main # Specify the branch here
-
+        git push origin main # Assuming the branch name is main, change if needed
 ```
 
 4. Customize the workflow as needed. You can change the filename (`example.txt`) or modify the commit message format.
