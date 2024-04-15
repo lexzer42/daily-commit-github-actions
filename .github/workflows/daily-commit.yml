@@ -23,10 +23,11 @@ jobs:
       run: |
         QUOTE=$(curl -s 'https://zenquotes.io/api/random' | jq -r '.[0].q')
         COMMIT_TIME=$(date '+%d %B of %Y in %H hours %M minutes')
-        echo "$COMMIT_TIME - \"$QUOTE\"" >> example.txt
+        echo "Fetched Inspirational Quote at $COMMIT_TIME - \"$QUOTE\"" >> example.txt
 
     - name: Commit Changes
       run: |
         git add example.txt
+        git status  # Add this for debugging purposes
         git commit -m "Auto commit with inspirational quote $(date +%F)"
         git push origin main # Assuming the branch name is main, change if needed
