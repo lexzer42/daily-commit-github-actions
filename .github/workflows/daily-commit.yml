@@ -1,10 +1,8 @@
 name: Daily Commit with Inspirational Quote
 
 on:
-  schedule:
-    - cron: '0 0 * * *' # Runs every day at midnight
   workflow_run:
-    workflows: ["Daily Commit with Inspirational Quote"]
+    workflows: ["Daily Trigger"]
     types:
       - completed
 
