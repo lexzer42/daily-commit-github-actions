@@ -1,0 +1,16 @@
+name: Daily Trigger
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs every day at midnight
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Trigger Daily Workflow
+      uses: peter-evans/repository-dispatch@v2
+      with:
+        token: ${{ secrets.PAT }}
+        repository: lexzer42/daily-commit-github-actions
+        workflow: Daily Commit with Inspirational Quote
