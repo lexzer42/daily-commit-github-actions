@@ -12,19 +12,21 @@ jobs:
 
     - name: Fetch motivational quote
       run: |
-            # Fetch a motivational quote from the API
-            quote=$(curl -s https://api.api-ninjas.com/v1/quotes?category=attitude)
+            # Fetch a motivational quote from the API using the stored API key
+            api_key="${{ secrets.API_KEY }}"
+            category="happiness"
+            quote=$(curl -s -H "X-Api-Key: $api_key" "https://api.api-ninjas.com/v1/quotes?category=$category")
             
             # Check if the API response contains valid JSON
-            if jq -e . >/dev/null 2>&1 <<<"$quote"; then
+            if jq -e '.[]' >/dev/null <<<"$quote"; then
                 # Extract the quote text from the JSON response
-                quote_text=$(echo "$quote" | jq -r '.[0].quote')
+                quote_text=$(echo "$quote" | jq -r '.quote')
                 
                 # Get the current timestamp
                 timestamp=$(date +"%Y-%m-%d %T")
                 
-                # Define the file path using the secret
-                file_path="${{ secrets.GH_PATH }}/quotes.txt"
+                # Define the file path
+                file_path="${{ github.workspace }}/quotes.txt"
                 
                 # Append the quote along with additional details to the quotes.txt file
                 echo "Timestamp: $timestamp" >> "$file_path"
@@ -47,3 +49,5 @@ jobs:
                 echo "Error: Invalid JSON response from the API"
                 exit 1
             fi
+            
+            shell: /usr/bin/bash -e {0}
