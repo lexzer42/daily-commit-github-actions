@@ -1,10 +1,8 @@
 name: Daily Commit with Inspirational Quote
 
 on:
-  workflow_run:
-    workflows: ["Daily Trigger"]
-    types:
-      - completed
+  schedule:
+    - cron: '*/5 * * * *'  # Run every 5 minutes
 
 jobs:
   commit:
@@ -21,6 +19,9 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
 
+    - name: Pull changes from remote
+      run: git pull origin main
+
     - name: Fetch Inspirational Quote
       run: |
         QUOTE=$(curl -s 'https://zenquotes.io/api/random' | jq -r '.[0].q')
@@ -32,9 +33,6 @@ jobs:
         git add example.txt
         git status  # Add this for debugging purposes
         git commit -m "Auto commit with inspirational quote $(date +%F)"
-
-    - name: Pull changes from remote
-      run: git pull origin main
 
     - name: Push changes to remote
       run: git push origin main
