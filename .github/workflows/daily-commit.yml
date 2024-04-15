@@ -2,7 +2,7 @@ name: Daily Commit with Inspirational Quote
 
 on:
   schedule:
-    - cron: '*/5 * * * *' # Runs every day at midnight
+    - cron:  '0 12 * * *' # Runs every day at 12 PM (noon)
 
 jobs:
   commit:
