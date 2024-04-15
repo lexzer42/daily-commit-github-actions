@@ -2,7 +2,7 @@ name: Daily Commit with Inspirational Quote
 
 on:
   schedule:
-    - cron: '*/30 * * * *' # Runs every 30 seconds for testing
+    - cron: '* * * * *' # Runs every minute for testing
 
 jobs:
   commit:
@@ -16,17 +16,20 @@ jobs:
 
     - name: Set up Git
       run: |
+        echo "Setting up Git"
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
 
     - name: Fetch Inspirational Quote
       run: |
+        echo "Fetching Inspirational Quote"
         QUOTE=$(curl -s 'https://zenquotes.io/api/random' | jq -r '.[0].q')
         COMMIT_TIME=$(date '+%d %B of %Y in %H hours %M minutes')
         echo "Fetched Inspirational Quote at $COMMIT_TIME - \"$QUOTE\"" >> example.txt
 
     - name: Commit Changes
       run: |
+        echo "Committing Changes"
         git add example.txt
         git status  # Add this for debugging purposes
         git commit -m "Auto commit with inspirational quote $(date +%F)"
