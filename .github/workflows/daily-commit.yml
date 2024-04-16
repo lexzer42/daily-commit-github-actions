@@ -16,8 +16,8 @@ jobs:
 
     - name: Set up Git
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
+        git config --local user.email "oscaremilio.roj@gmail.com"
+        git config --local user.name "lexzer42"
 
     - name: Fetch Inspirational Quote
       run: |
